@@ -1,0 +1,75 @@
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+
+plugins {
+    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("io.micronaut.application") version "3.7.9"
+    id("org.openapi.generator") version "5.3.0"
+}
+
+version = "0.1"
+group = "com.ing"
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo1.maven.org/maven2" }
+
+}
+
+dependencies {
+    annotationProcessor("io.micronaut:micronaut-http-validation")
+//    annotationProcessor("io.micronaut.openapi:micronaut-openapi")
+
+    implementation("io.micronaut:micronaut-http-client")
+//    implementation("io.micronaut:micronaut-jackson-databind")
+//    implementation("io.swagger.core.v3:swagger-annotations")
+//    implementation("jakarta.annotation:jakarta.annotation-api")
+
+    compileOnly('org.openapitools:openapi-generator-gradle-plugin:6.4.0')
+    compileOnly("org.graalvm.nativeimage:svm")
+
+    runtimeOnly("org.slf4j:slf4j-simple")
+
+    testImplementation("org.assertj:assertj-core")
+    testImplementation("org.mockito:mockito-core")
+}
+
+application {
+    mainClass.set("com.ing.Application")
+}
+java {
+    sourceCompatibility = JavaVersion.toVersion("17")
+    targetCompatibility = JavaVersion.toVersion("17")
+}
+
+graalvmNative.toolchainDetection = false
+micronaut {
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("com.ing.*")
+    }
+}
+
+def openApiSpecs = [
+        [file: "atmservice.json", model: "com.ing.model.atm"],
+        [file: "onlinegame.json", model: "com.ing.model.onlinegame"],
+        [file: "transactions.json", model: "com.ing.model.transactions"],
+]
+
+openApiSpecs.each {
+    String taskName = "generateModel_" + it.file
+    String file = it.file
+    String model = it.model
+    task(taskName, type: GenerateTask) {
+        inputSpec = "$projectDir/openapi/$file"
+        outputDir = "$buildDir/generated-models"
+        generatorName = "java"
+        modelPackage = model.toString()
+        globalProperties = [
+                models    : '',
+                modelTests: 'false'
+        ]
+    }
+    compileJava.dependsOn(taskName)
+}
