@@ -1,7 +1,10 @@
 micronaut:
   application:
     name: greensoftware
+  server:
+    port: 20010
+    max-request-size: 999999999
 netty:
   default:
     allocator:
-      max-order: 3
+      max-order: 100000
