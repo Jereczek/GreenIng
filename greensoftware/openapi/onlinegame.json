@@ -43,6 +43,10 @@
     "schemas": {
       "Players": {
         "type": "object",
+        "required": [
+          "groupCount",
+          "clans"
+        ],
         "properties": {
           "groupCount": {
             "description": "Number of players in single group",
@@ -63,6 +67,10 @@
       },
       "Clan": {
         "type": "object",
+        "required": [
+          "numberOfPlayers",
+          "points"
+        ],
         "properties": {
           "numberOfPlayers": {
             "type": "integer",

@@ -1,0 +1,76 @@
+package com.ing.onlinegame.engine;
+
+import com.ing.model.onlinegame.Clan;
+import com.ing.model.onlinegame.Players;
+import com.ing.onlinegame.engine.collection.TreePriorityQueueClansCollection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+
+public class ClanPickerEngine {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClanPickerEngine.class);
+
+    private final LinkedList<List<Clan>> matchmakingResult = new LinkedList<>();
+
+    private final TreePriorityQueueClansCollection clansCollection;
+
+    private final Players players;
+
+    private final String enginId = String.valueOf(UUID.randomUUID());
+
+    public ClanPickerEngine(Players players, ClanPickerEngineUtil clanPickerEngineUtil) {
+        LOGGER.debug("EnginId: {} | ClanPickerEngine initialized.", enginId);
+        this.players = players;
+        this.clansCollection = new TreePriorityQueueClansCollection(players, clanPickerEngineUtil);
+    }
+
+    public void computeMatchmaking() {
+        LOGGER.debug("EnginId: {} | Compute matchmaking started.", enginId);
+        while (clansCollection.isNotEmpty()) {
+            Optional<Clan> theStrongestClan = clansCollection.poolTheStrongestClanInCollection();
+            if (theStrongestClan.isEmpty()) {
+                break;
+            }
+            ArrayList<Clan> packedGroup = new ArrayList<>(players.getGroupCount());
+            packedGroup.add(theStrongestClan.get());
+
+            int currentGameHeadCount = theStrongestClan.get().getNumberOfPlayers();
+            int remainingAvailableSlots = players.getGroupCount() - currentGameHeadCount;
+
+            while(currentGameHeadCount < players.getGroupCount()) {
+                Optional<Clan> nextClan = findAndPoolNextAvailableClan(remainingAvailableSlots);
+                if (nextClan.isPresent()) {
+                    packedGroup.add(nextClan.get());
+                    currentGameHeadCount += nextClan.get().getNumberOfPlayers();
+                } else {
+                    break;
+                }
+            }
+            addGroupToMatchmakingResult(packedGroup);
+            LOGGER.debug("EnginId: {} | Packed group: {}", enginId, packedGroup);
+        }
+        LOGGER.debug("EnginId: {} | Compute matchmaking finished.", enginId);
+    }
+
+    private Optional<Clan> findAndPoolNextAvailableClan(int remainingAvailableSlots) {
+        LOGGER.debug("EnginId: {} | FindAndPoolNextAvailableClan for remaining {} available slots.", enginId, remainingAvailableSlots);
+        if (remainingAvailableSlots <= 0) {
+            return Optional.empty();
+        }
+        Optional<Clan> nextAvailableClanForGivenSize = clansCollection.poolTheStrongestClanForAvailableSize(remainingAvailableSlots);
+        if (nextAvailableClanForGivenSize.isPresent()) {
+            return nextAvailableClanForGivenSize;
+        }
+        return findAndPoolNextAvailableClan(--remainingAvailableSlots);
+    }
+
+    public LinkedList<List<Clan>> getMatchmakingResult() {
+        return matchmakingResult;
+    }
+
+    public void addGroupToMatchmakingResult(List<Clan> group) {
+        matchmakingResult.add(group);
+    }
+}
