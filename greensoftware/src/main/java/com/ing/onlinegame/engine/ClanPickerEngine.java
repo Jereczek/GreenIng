@@ -18,16 +18,16 @@ public class ClanPickerEngine {
 
     private final Players players;
 
-    private final String enginId = String.valueOf(UUID.randomUUID());
+    private final String engineId = String.valueOf(UUID.randomUUID());
 
     public ClanPickerEngine(Players players, ClanPickerEngineUtil clanPickerEngineUtil) {
-        LOGGER.debug("EnginId: {} | ClanPickerEngine initialized.", enginId);
+        LOGGER.debug("EnginId: {} | ClanPickerEngine initialized.", engineId);
         this.players = players;
         this.clansCollection = new TreePriorityQueueClansCollection(players, clanPickerEngineUtil);
     }
 
     public void computeMatchmaking() {
-        LOGGER.debug("EnginId: {} | Compute matchmaking started.", enginId);
+        LOGGER.debug("EnginId: {} | Compute matchmaking started.", engineId);
         while (clansCollection.isNotEmpty()) {
             Optional<Clan> theStrongestClan = clansCollection.poolTheStrongestClanInCollection();
             if (theStrongestClan.isEmpty()) {
@@ -49,17 +49,19 @@ public class ClanPickerEngine {
                 }
             }
             addGroupToMatchmakingResult(packedGroup);
-            LOGGER.debug("EnginId: {} | Packed group: {}", enginId, packedGroup);
+            LOGGER.debug("EnginId: {} | Packed group: {}", engineId, packedGroup);
         }
-        LOGGER.debug("EnginId: {} | Compute matchmaking finished.", enginId);
+        LOGGER.debug("EnginId: {} | Compute matchmaking finished.", engineId);
     }
 
     private Optional<Clan> findAndPoolNextAvailableClan(int remainingAvailableSlots) {
-        LOGGER.debug("EnginId: {} | FindAndPoolNextAvailableClan for remaining {} available slots.", enginId, remainingAvailableSlots);
+        LOGGER.debug("EnginId: {} | FindAndPoolNextAvailableClan for remaining {} available slots.",
+                engineId, remainingAvailableSlots);
         if (remainingAvailableSlots <= 0) {
             return Optional.empty();
         }
-        Optional<Clan> nextAvailableClanForGivenSize = clansCollection.poolTheStrongestClanForAvailableSize(remainingAvailableSlots);
+        Optional<Clan> nextAvailableClanForGivenSize =
+                clansCollection.poolTheStrongestClanForAvailableSize(remainingAvailableSlots);
         if (nextAvailableClanForGivenSize.isPresent()) {
             return nextAvailableClanForGivenSize;
         }

@@ -14,6 +14,6 @@ public class TransactionsCacheFactory {
 
     @Singleton
     public TransactionsEngine transactionsCache() {
-        return new TransactionsEngine(transactionsOperations, UUID.randomUUID().toString());
+        return new TransactionsEngine(transactionsOperations);
     };
 }

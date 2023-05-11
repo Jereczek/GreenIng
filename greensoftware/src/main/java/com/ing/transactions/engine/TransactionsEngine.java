@@ -10,26 +10,23 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 public class TransactionsEngine {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AtmsController.class);
-    private final String engineId;
-    private long operations = 0;
+    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionsEngine.class);
+    private final String engineId = String.valueOf(UUID.randomUUID());
     private final TransactionsOperations transactionsOperations;
     private final Map<Integer, AccountDecorator> accounts = new ConcurrentHashMap<>();
 
-    public TransactionsEngine(TransactionsOperations transactionsOperations, String engineId) {
-        LOGGER.info("Started transactions engine: {}", engineId);
-        this.engineId = engineId;
+    public TransactionsEngine(TransactionsOperations transactionsOperations) {
+        LOGGER.debug("EngineId: {} | TransactionsEngine initialized.", engineId);
         this.transactionsOperations = transactionsOperations;
     }
 
     public Collection<AccountDecorator> getCurrentAccountsState() {
-        LOGGER.info("Current State for engine: {}", engineId);
-        LOGGER.info("Operations count: {}", operations);
         return accounts.values();
     }
 
     public void processTransaction(Transaction transactionToProcess) {
-        operations++;
+        LOGGER.debug("EngineId: {} | TransactionsEngine - processing transaction: {}.",
+                engineId, transactionToProcess);
         Integer debitKey =  Objects.hash(transactionToProcess.getDebitAccount());
         Integer creditKey = Objects.hash(transactionToProcess.getCreditAccount());
 
