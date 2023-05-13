@@ -60,9 +60,10 @@ test {
 }
 jacocoTestReport {
     reports {
-        html.destination file("${buildDir}/jacoco/jacocoHTML")
+        xml.required = true
+        html.required = true
         xml.destination file("${buildDir}/jacoco/jacoco-coverage.xml")
-        xml.enabled true
+        html.destination file("${buildDir}/jacoco/jacocoHTML")
     }
 }
 tasks.withType(Test) {
