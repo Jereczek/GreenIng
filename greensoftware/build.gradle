@@ -59,6 +59,12 @@ test {
     finalizedBy jacocoTestReport // report is always generated after tests run
 }
 jacocoTestReport {
+    reports {
+        xml.enabled true
+        xml.destination file("${buildDir}/jacoco/jacoco-coverage.xml")
+        html.enabled true
+        html.destination file("${buildDir}/jacoco/jacocoHTML")
+    }
     dependsOn test // tests are required to run before generating the report
 }
 
@@ -67,7 +73,7 @@ sonar {
         property "sonar.projectKey", "Jereczek_GreenIng"
         property "sonar.organization", "jereczek"
         property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/html/index.html"
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/jacoco/jacoco-coverage.xml"
     }
 }
 
