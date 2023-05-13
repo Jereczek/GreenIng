@@ -62,12 +62,9 @@ jacocoTestReport {
     reports {
         xml.required = true
         html.required = true
-        xml.destination file("${buildDir}/jacoco/jacoco-coverage.xml")
-        html.destination file("${buildDir}/jacoco/jacocoHTML")
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
-}
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
+    dependsOn test
 }
 
 sonar {
@@ -75,7 +72,7 @@ sonar {
         property "sonar.projectKey", "Jereczek_GreenIng"
         property "sonar.organization", "jereczek"
         property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.coverage.jacoco.xmlReportPaths", "build/jacoco/jacoco-coverage.xml"
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
 
