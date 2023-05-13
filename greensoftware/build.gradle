@@ -60,12 +60,14 @@ test {
 }
 jacocoTestReport {
     reports {
-        xml.enabled true
-        xml.destination file("${buildDir}/jacoco/jacoco-coverage.xml")
-        html.enabled true
         html.destination file("${buildDir}/jacoco/jacocoHTML")
+        xml.destination file("${buildDir}/jacoco/jacoco-coverage.xml")
+        html.enabled false
+        xml.enabled true
     }
-    dependsOn test // tests are required to run before generating the report
+}
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
 }
 
 sonar {
