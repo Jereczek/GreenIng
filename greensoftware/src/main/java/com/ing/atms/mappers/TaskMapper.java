@@ -23,26 +23,28 @@ public class TaskMapper {
         return atmOne;
     }
 
-    public Ordering<Task> priorityOrdering = new Ordering<>() {
-        @Override
-        public int compare(Task left, Task right) {
-            int result = ComparisonChain.start()
-                    .compare(
-                            Objects.requireNonNull(left.getRegion()),
-                            Objects.requireNonNull(right.getRegion()))
-                    .compare(
-                            requestTypeEnumMapper.getRequestTypeCriticality(Objects.requireNonNull(left.getRequestType())),
-                            requestTypeEnumMapper.getRequestTypeCriticality(Objects.requireNonNull(right.getRequestType())))
-                    .result();
-            return result == 0 ? compareAtmIdsButLeaveLeftIfDiffers(left, right) : result;
-        }
-    };
+    public Ordering<Task> getTaskPriorityOrdering() {
+        return new Ordering<>() {
+            @Override
+            public int compare(Task left, Task right) {
+                int result = ComparisonChain.start()
+                        .compare(
+                                Objects.requireNonNull(left.getRegion()),
+                                Objects.requireNonNull(right.getRegion()))
+                        .compare(
+                                requestTypeEnumMapper.getRequestTypeCriticality(Objects.requireNonNull(left)),
+                                requestTypeEnumMapper.getRequestTypeCriticality(Objects.requireNonNull(right)))
+                        .result();
+                return result == 0 ? compareAtmIdsButLeaveLeftIfDiffers(left, right) : result;
+            }
 
-    private int compareAtmIdsButLeaveLeftIfDiffers(Task left, Task right) {
-        if (Objects.equals(left.getAtmId(), right.getAtmId()))
-            return 0;
-        else {
-            return LEAVE_LEFT_FIRST;
-        }
+            private int compareAtmIdsButLeaveLeftIfDiffers(Task left, Task right) {
+                if (Objects.equals(left.getAtmId(), right.getAtmId()))
+                    return 0;
+                else {
+                    return LEAVE_LEFT_FIRST;
+                }
+            }
+        };
     }
 }

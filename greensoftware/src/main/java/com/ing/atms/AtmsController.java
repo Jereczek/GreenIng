@@ -10,8 +10,8 @@ import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller("/atms")
 public class AtmsController {
@@ -25,7 +25,7 @@ public class AtmsController {
             consumes = MediaType.APPLICATION_JSON,
             produces = MediaType.APPLICATION_JSON,
             uri = "/calculateOrder")
-    public LinkedHashSet<ATM> calculate(@Body List<Task> tasks) {
+    public Set<ATM> calculate(@Body List<Task> tasks) {
         LOGGER.debug("Incoming request | POST | /atms/calculateOrder | Number of tasks {}", tasks.size());
         return atmsService.calculateOrderOfAtms(tasks);
     }

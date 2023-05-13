@@ -17,20 +17,12 @@ repositories {
 
 dependencies {
     annotationProcessor("io.micronaut:micronaut-http-validation")
-//    annotationProcessor("io.micronaut.openapi:micronaut-openapi")
 
-
-    implementation 'it.unimi.dsi:fastutil:8.5.12' // FastUtil high performance will check
-    implementation("com.google.guava:guava:31.1-jre") // guava high performance will check
-
-//    implementation("io.micronaut:micronaut-http-client")
-//    implementation("io.micronaut:micronaut-jackson-databind")
-//    implementation("io.swagger.core.v3:swagger-annotations")
-//    implementation("jakarta.annotation:jakarta.annotation-api")
+    implementation 'it.unimi.dsi:fastutil:8.5.12'
+    implementation("com.google.guava:guava:31.1-jre")
     implementation("io.micronaut:micronaut-http-server-netty")
     implementation("org.eclipse.collections:eclipse-collections:12.0.0.M1")
     implementation 'io.swagger:swagger-annotations:1.6.10'
-//    implementation 'javax.annotation:javax.annotation-api:1.3.2'
 
     compileOnly("com.google.code.findbugs:jsr305:3.0.2")
     compileOnly("com.google.code.gson:gson:2.10.1")
@@ -39,8 +31,16 @@ dependencies {
 
     runtimeOnly("org.slf4j:slf4j-simple")
 
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.2'
+    testImplementation("org.jeasy:easy-random-core:5.0.0")
     testImplementation("org.assertj:assertj-core")
     testImplementation("org.mockito:mockito-core")
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("io.micronaut.test:micronaut-test-junit5:3.9.2")
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.9.2')
+    testImplementation('org.junit.jupiter:junit-jupiter-engine:5.9.2')
+    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
+    testImplementation("io.micronaut.test:micronaut-test-rest-assured")
 }
 
 application {
@@ -49,6 +49,10 @@ application {
 java {
     sourceCompatibility = JavaVersion.toVersion("17")
     targetCompatibility = JavaVersion.toVersion("17")
+}
+
+test {
+    useJUnitPlatform()
 }
 
 graalvmNative.toolchainDetection = false
