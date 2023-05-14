@@ -2,7 +2,7 @@ micronaut:
   application:
     name: greensoftware
   server:
-    port: 20010
+    port: 8080
     max-request-size: 999999999
 netty:
   default:

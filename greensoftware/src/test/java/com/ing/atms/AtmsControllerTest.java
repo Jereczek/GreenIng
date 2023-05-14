@@ -15,8 +15,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @MicronautTest
 public class AtmsControllerTest {
@@ -38,6 +37,7 @@ public class AtmsControllerTest {
         when(atmsService.calculateOrderOfAtms(taskList)).thenReturn(atms);
 
         Set<ATM> result =  atmsController.calculate(taskList);
+        verify(atmsService).calculateOrderOfAtms(taskList);
         assertThat(result).isEqualTo(atms);
     }
 

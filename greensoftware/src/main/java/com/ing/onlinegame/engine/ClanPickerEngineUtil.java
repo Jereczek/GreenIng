@@ -10,22 +10,24 @@ import java.util.Objects;
 @Singleton
 public class ClanPickerEngineUtil {
 
-    public Ordering<Clan> priorityClanDescendingOrdering = new Ordering<>() {
-        @Override
-        public int compare(Clan left, Clan right) {
-            return ComparisonChain.start()
-                    .compare(
-                            Objects.requireNonNull(right.getPoints()),
-                            Objects.requireNonNull(left.getPoints()))
-                    .compare(
-                            Objects.requireNonNull(left.getNumberOfPlayers()),
-                            Objects.requireNonNull(right.getNumberOfPlayers()))
-                    .result();
-        }
-    };
+    public Ordering<Clan> getPriorityClanDescendingOrdering() {
+        return new Ordering<>() {
+            @Override
+            public int compare(Clan left, Clan right) {
+                return ComparisonChain.start()
+                        .compare(
+                                Objects.requireNonNull(right.getPoints()),
+                                Objects.requireNonNull(left.getPoints()))
+                        .compare(
+                                Objects.requireNonNull(left.getNumberOfPlayers()),
+                                Objects.requireNonNull(right.getNumberOfPlayers()))
+                        .result();
+            }
+        };
+    }
 
     public boolean isLeftClanStronger(Clan left, Clan right) {
-        int result = this.priorityClanDescendingOrdering.compare(left, right);
+        int result = getPriorityClanDescendingOrdering().compare(left, right);
         return result < 0;
     }
 }

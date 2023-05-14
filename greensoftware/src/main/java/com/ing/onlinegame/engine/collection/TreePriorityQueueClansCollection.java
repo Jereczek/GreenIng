@@ -61,7 +61,7 @@ public class TreePriorityQueueClansCollection {
 
     private PriorityQueue<Clan> createPriorityQueueWithCorrespondingNumberOfPlayers(int clanSize) {
         LOGGER.debug("TreePriorityQueueClansCollection | Creating new queue for clans with size: {}", clanSize);
-        PriorityQueue<Clan> newPriorityQueue = new PriorityQueue<>(clanPickerEngineUtil.priorityClanDescendingOrdering);
+        PriorityQueue<Clan> newPriorityQueue = new PriorityQueue<>(clanPickerEngineUtil.getPriorityClanDescendingOrdering());
         clansCollection.put(clanSize, newPriorityQueue);
         return newPriorityQueue;
     }

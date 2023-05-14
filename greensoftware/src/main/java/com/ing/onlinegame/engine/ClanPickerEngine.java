@@ -20,10 +20,10 @@ public class ClanPickerEngine {
 
     private final String engineId = String.valueOf(UUID.randomUUID());
 
-    public ClanPickerEngine(Players players, ClanPickerEngineUtil clanPickerEngineUtil) {
+    public ClanPickerEngine(Players players, TreePriorityQueueClansCollection treePriorityQueueClansCollection) {
         LOGGER.debug("EnginId: {} | ClanPickerEngine initialized.", engineId);
         this.players = players;
-        this.clansCollection = new TreePriorityQueueClansCollection(players, clanPickerEngineUtil);
+        this.clansCollection = treePriorityQueueClansCollection;
     }
 
     public void computeMatchmaking() {
@@ -54,6 +54,10 @@ public class ClanPickerEngine {
         LOGGER.debug("EnginId: {} | Compute matchmaking finished.", engineId);
     }
 
+    public LinkedList<List<Clan>> getMatchmakingResult() {
+        return matchmakingResult;
+    }
+
     private Optional<Clan> findAndPoolNextAvailableClan(int remainingAvailableSlots) {
         LOGGER.debug("EnginId: {} | FindAndPoolNextAvailableClan for remaining {} available slots.",
                 engineId, remainingAvailableSlots);
@@ -68,11 +72,7 @@ public class ClanPickerEngine {
         return findAndPoolNextAvailableClan(--remainingAvailableSlots);
     }
 
-    public LinkedList<List<Clan>> getMatchmakingResult() {
-        return matchmakingResult;
-    }
-
-    public void addGroupToMatchmakingResult(List<Clan> group) {
+    private void addGroupToMatchmakingResult(List<Clan> group) {
         matchmakingResult.add(group);
     }
 }

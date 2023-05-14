@@ -1,13 +1,15 @@
 package com.ing.transactions.engine;
 
-import com.ing.atms.AtmsController;
 import com.ing.model.transactions.Transaction;
 import com.ing.transactions.decorators.AccountDecorator;
 import org.eclipse.collections.impl.map.mutable.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 public class TransactionsEngine {
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionsEngine.class);
@@ -29,6 +31,10 @@ public class TransactionsEngine {
                 engineId, transactionToProcess);
         Integer debitKey =  Objects.hash(transactionToProcess.getDebitAccount());
         Integer creditKey = Objects.hash(transactionToProcess.getCreditAccount());
+
+        if (debitKey.equals(creditKey)) {
+            return;
+        }
 
         accounts.merge(
                 debitKey,
