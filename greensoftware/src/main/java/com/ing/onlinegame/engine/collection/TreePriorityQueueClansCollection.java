@@ -29,6 +29,11 @@ public class TreePriorityQueueClansCollection {
         return currentSize > 0;
     }
 
+    public Integer getTheHighestHeadCountInCollection() {
+        LOGGER.debug("TreePriorityQueueClansCollection | Get the highest head count within collection");
+        return clansCollection.lastKey();
+    }
+
     public Optional<Clan> poolTheStrongestClanInCollection() {
         LOGGER.debug("TreePriorityQueueClansCollection | Pooling the strongest clan from whole collection");
         PriorityQueue<Clan> entryOfPriorityQueue = clansCollection.get(findQueueKeyWithTheStrongestClan());

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @MicronautTest
@@ -19,8 +20,9 @@ public class ClanPickerEngineTest {
 
     @Test
     public void When_ClanPickerEngineComputeMatchMakingAndCollectionIsEmpty_Expect_EmptyMatchmakingResult() {
-        Players players = easyRandom.nextObject(Players.class);
+        Players players = preparePlayersCollectionWithSize(2, 0);
         TreePriorityQueueClansCollection treePriorityQueueClansCollection = mock(TreePriorityQueueClansCollection.class);
+        when(treePriorityQueueClansCollection.getTheHighestHeadCountInCollection()).thenReturn(0);
         ClanPickerEngine clanPickerEngine = new ClanPickerEngine(players, treePriorityQueueClansCollection);
         clanPickerEngine.computeMatchmaking();
         when(treePriorityQueueClansCollection.isNotEmpty()).thenReturn(false);
@@ -102,6 +104,18 @@ public class ClanPickerEngineTest {
         verify(treePriorityQueueClansCollection, atLeastOnce()).poolTheStrongestClanForAvailableSize(3);
         verify(treePriorityQueueClansCollection, atLeastOnce()).poolTheStrongestClanForAvailableSize(2);
         verify(treePriorityQueueClansCollection, atLeastOnce()).poolTheStrongestClanForAvailableSize(1);
+    }
+
+    @Test
+    public void When_SomeClanHasMorePlayersThanAvailableGroupCount_Expect_ThrowException() {
+        int groupSize = 1;
+        int clans = 1;
+        Players players = preparePlayersCollectionWithSize(groupSize, clans);
+        TreePriorityQueueClansCollection treePriorityQueueClansCollection = mock(TreePriorityQueueClansCollection.class);
+        when(treePriorityQueueClansCollection.getTheHighestHeadCountInCollection()).thenReturn(2);
+
+        assertThrows(Throwable.class,
+                () -> new ClanPickerEngine(players, treePriorityQueueClansCollection));
     }
 
     private Players preparePlayersCollectionWithSize(int groupSize, int noClans) {

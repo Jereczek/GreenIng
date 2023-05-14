@@ -25,7 +25,7 @@ public class TransactionsController {
             produces = MediaType.APPLICATION_JSON,
             uri = "/report")
     public ImmutableSortedSet<Account> report(@Body List<Transaction> transactions) {
-        LOGGER.debug("Incoming request | POST | /transactions/report | Number of transactions {}", transactions.size());
+        LOGGER.info("Incoming request | POST | /transactions/report | Number of transactions {}", transactions.size());
         return transactionsService.processTransactions(transactions);
     }
 }

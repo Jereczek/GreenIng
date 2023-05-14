@@ -26,7 +26,7 @@ public class AtmsController {
             produces = MediaType.APPLICATION_JSON,
             uri = "/calculateOrder")
     public Set<ATM> calculate(@Body List<Task> tasks) {
-        LOGGER.debug("Incoming request | POST | /atms/calculateOrder | Number of tasks {}", tasks.size());
+        LOGGER.info("Incoming request | POST | /atms/calculateOrder | Number of tasks {}", tasks.size());
         return atmsService.calculateOrderOfAtms(tasks);
     }
 }

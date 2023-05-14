@@ -25,7 +25,7 @@ public class OnlineGameController {
             produces = MediaType.APPLICATION_JSON,
             uri = "/calculate")
     public List<List<Clan>> calculate(@Body Players players) {
-        LOGGER.debug("Incoming request | POST | /onlinegame/calculate | Number of clans {}", players.getClans().size());
+        LOGGER.info("Incoming request | POST | /onlinegame/calculate | Number of clans {}", players.getClans().size());
         return onlineGameService.computeMatchmaking(players);
     }
 }

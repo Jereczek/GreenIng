@@ -24,6 +24,8 @@ public class ClanPickerEngine {
         LOGGER.debug("EnginId: {} | ClanPickerEngine initialized.", engineId);
         this.players = players;
         this.clansCollection = treePriorityQueueClansCollection;
+        throwWhenAnyClanHasMorePlayersThanAvailableGroupCount(
+                clansCollection.getTheHighestHeadCountInCollection());
     }
 
     public void computeMatchmaking() {
@@ -74,5 +76,11 @@ public class ClanPickerEngine {
 
     private void addGroupToMatchmakingResult(List<Clan> group) {
         matchmakingResult.add(group);
+    }
+
+    private void throwWhenAnyClanHasMorePlayersThanAvailableGroupCount(Integer theMostCountedClan) {
+        if (players.getGroupCount() < theMostCountedClan) {
+            throw new RuntimeException("Provided strongest clan has more players than group");
+        }
     }
 }
